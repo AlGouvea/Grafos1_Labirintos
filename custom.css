@@ -1,6 +1,13 @@
 .btn {
     border: none;
+    height: 60px;
+    width: 180px;
+    font-size: larger;
     border-radius: 15px;
     background-color: green;
     color: white;
+}
+
+canvas {
+    margin-left: 550px;
 }
