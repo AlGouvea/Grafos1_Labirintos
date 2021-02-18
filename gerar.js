@@ -14,7 +14,7 @@ function setup(){
 let count = 0;
 function draw()
 {
-  if(count % 1 == 0)
+  if(count % 5 == 0)
   {
     if(labirinto.stack.length != 0)
     {
@@ -177,11 +177,11 @@ function drawbloco(bloco, i, j){
   
     if(bloco.visto == true)
     {
-      fill(0);
+      fill(255);
       square(i*res, j*res, res);
       
       strokeWeight(2);
-      stroke("white");
+      stroke("black");
       if(bloco.cima == "parede")
       {
         line((i)*res, (j)*res, 
@@ -202,5 +202,12 @@ function drawbloco(bloco, i, j){
         line((i)*res, (j)*res, 
              (i)*res, (j+1)*res);
       }
+    }
+
+    if(bloco.eAtual)
+    {
+      fill("lightgreen")
+      noStroke();
+      square(i*res, j*res, res);
     }
 }
