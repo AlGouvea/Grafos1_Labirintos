@@ -2,11 +2,28 @@ let labirinto = null;
 let res = 50;
 
 function setup(){
-
+    createCanvas(800, 800);
+  
+    noStroke();
+    
+    geraLabirinto(width/res + 2, height/res + 2);
+    
+    drawlabirinto();
 }
 
-function draw(){
-
+let count = 0;
+function draw()
+{
+  if(count % 1 == 0)
+  {
+    if(labirinto.stack.length != 0)
+    {
+      background("grey");
+      labirintoIterar();
+      drawlabirinto();
+    }
+  }
+  count++;
 }
 
 function geraLabirinto(w, h){
@@ -52,7 +69,7 @@ function geraLabirinto(w, h){
 function labirintoIterar(){
     let atual = labirinto.stack.pop();
   
-    let blocoAndparede = pickNeighbor(atual);
+    let blocoAndparede = pickVizinho(atual);
     if(blocoAndparede)
     {
       labirinto.stack.push(atual);
@@ -74,17 +91,116 @@ function labirintoIterar(){
 }
 
 function pickVizinho(bloco){
-
+    let nao_visto = [];
+  
+    let cimabloco = labirinto.blocos[bloco.x][bloco.y+1];
+    if(!cimabloco.visto)
+    {
+      nao_visto.push({
+        "bloco":cimabloco,
+        "parede":"cima"
+      });
+    }
+    let baixobloco = labirinto.blocos[bloco.x][bloco.y-1];
+    if(!baixobloco.visto)
+    {
+      nao_visto.push({
+        "bloco":baixobloco,
+        "parede":"baixo"
+      });
+    }
+    let direitabloco = labirinto.blocos[bloco.x+1][bloco.y];
+    if(!direitabloco.visto)
+    {
+      nao_visto.push({
+        "bloco":direitabloco,
+        "parede":"direita"
+      });
+    }
+    let esquerdabloco = labirinto.blocos[bloco.x-1][bloco.y];
+    if(!esquerdabloco.visto)
+    {
+      nao_visto.push({
+        "bloco":esquerdabloco,
+        "parede":"esquerda"
+      });
+    }
+    
+    if(nao_visto.length == 0)
+    {
+      return null;
+    }
+    
+    return nao_visto[Math.floor(
+      Math.random()*nao_visto.length
+    )];
 }
 
 function paredeOposta(parede){
-
+    if(parede == "cima")
+    {
+      return "baixo"
+    }
+    else if(parede == "baixo")
+    {
+      return "cima"
+    }
+    else if(parede == "direita")
+    {
+      return "esquerda"
+    }
+    else if(parede == "esquerda")
+    {
+      return "direita"
+    }
+    
+    return -1;
 }
 
 function drawlabirinto(){
-
+    push();
+    translate(-res, -res);
+    for(let i = 0; i < labirinto.blocos.length; i++)
+    {
+      for(let j = 0; 
+          j < labirinto.blocos[i].length; j++)
+      {
+        let bloco = labirinto.blocos[i][j];
+        drawbloco(bloco, i, j);
+      }
+    }
+    pop();
 }
 
 function drawbloco(bloco, i, j){
-
+    strokeWeight(0);
+  
+    if(bloco.visto == true)
+    {
+      fill(0);
+      square(i*res, j*res, res);
+      
+      strokeWeight(2);
+      stroke("white");
+      if(bloco.cima == "parede")
+      {
+        line((i)*res, (j)*res, 
+             (i+1)*res, (j)*res);
+      }
+      if(bloco.baixo == "parede")
+      {
+        line((i)*res, (j+1)*res, 
+             (i+1)*res, (j+1)*res);
+      }
+      if(bloco.esquerda == "parede")
+      {
+        line((i+1)*res, (j)*res, 
+             (i+1)*res, (j+1)*res);
+      }
+      if(bloco.direita == "parede")
+      {
+        line((i)*res, (j)*res, 
+             (i)*res, (j+1)*res);
+      }
+    }
 }
