@@ -7,7 +7,7 @@
 |Matrícula | Aluno |
 | -- | -- |
 | 18/0012002  |  Álvaro Henrique|
-| xx/xxxxxx  |  xxxx xxxx xxxxx |
+| 18/0011308  |  Peniel Etèmana |
 
 ## Sobre 
  Um software para gerar e resolver labirintos 
