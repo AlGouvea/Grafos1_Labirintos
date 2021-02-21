@@ -190,6 +190,8 @@ if(flag == 0){
           exit();
         }
       }
+    }else{
+      
     }
     count++;
   }

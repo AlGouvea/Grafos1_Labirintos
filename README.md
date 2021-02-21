@@ -10,10 +10,12 @@
 | 18/0011308  |  Peniel Etèmana |
 
 ## Sobre 
- Um software para gerar e resolver labirintos 
+ Um software para gerar labirintos e encontrar uma resolução para o labirinto gerado.
 
 ## Screenshots
-Adicione 3 ou mais screenshots do projeto em funcionamento.
+![alt text](https://github.com/AlGouvea/Grafos1_Labirintos/blob/master/Print1.jpg?raw=true)
+![alt text](https://github.com/AlGouvea/Grafos1_Labirintos/blob/master/Print2.jpg?raw=true)
+![alt text](https://github.com/AlGouvea/Grafos1_Labirintos/blob/master/Print3.jpg?raw=true)
 
 ## Instalação 
 **Linguagem**: Javascript<br>
