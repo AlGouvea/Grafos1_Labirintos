@@ -1,7 +1,7 @@
 //Definicoes
 let labirinto = null;
 let labirintoSolve = null;
-let res = 80;
+let res = 40;
 flag = 0;
 
 //Botao para chamada da funcao resolver
@@ -70,9 +70,12 @@ function setupGraph(){
       for(var j = 1; j <= 800/res; j++){
         labirintoSolve.nodes[nVertices] = {
           "edges": [],
+          "valor": 0,
           "coords":[],
           "visitado":false,
         }
+
+        labirintoSolve.nodes[nVertices].valor = nVertices;
 
         //Criar aresta entre blocos que nao tem parede
         if(labirinto.blocos[i][j].cima == "open"){
@@ -94,13 +97,12 @@ function setupGraph(){
 
     visited = new Set();//Vetor de blocos visitados 
     DFS(0, nVertices-1, visited); //Chama a DFS
-    
-    exit();//Saida
   }
+  exit();//Saida
 }
 
 
-function DFS(start, exit, visited, cont){
+function DFS(start, exit, visited){
   visited.add(start);//Adiciona o bloco aos visitados
 
   const edges = labirintoSolve.nodes[start].edges;//Lista de adjacencia
@@ -115,7 +117,7 @@ function DFS(start, exit, visited, cont){
       print = DFS(dest, exit, visited);//Chamo a DFS com o vizinho
 
       if(print == 1){//Se print = 1 dabemos que faz parte da rota de resolucao
-        drawSolve(labirintoSolve.nodes[dest].coords[0]-1, labirintoSolve.nodes[dest].coords[1]-1);//Desenha o bloco da rota
+        drawSolve(labirintoSolve.nodes[dest]);//Desenha o bloco da rota
         return 1;//Passa a informacao pro resto da rota
       }
 
@@ -124,12 +126,37 @@ function DFS(start, exit, visited, cont){
 }
 
 
-function drawSolve(x, y){//Desenhar o bloco
-  //Definir quadrado
-  noStroke();
-  fill("green");
-  circle(x*res+(res/2), y*res+(res/2), res/2);
+function drawSolve(node){//Desenhar o bloco
+  var i = node.coords[0]-1;
+  var j = node.coords[1]-1;
+  
+  noStroke()
 
+  fill("green");//Pintar de branco
+
+    //Definir quadrado
+    square(i*res, j*res, res);
+    
+    //Grossura e cor da parede
+    strokeWeight(3);
+    stroke("black");
+
+
+    //Pintar as bordas do bloco que tem parede
+    var valor = node.valor;
+
+    if(!node.edges.includes(valor-1)){//Cima
+      line((i)*res, (j)*res, (i+1)*res, (j)*res);
+    }
+    if(!node.edges.includes(valor+(800/res))){//Direita
+      line((i+1)*res, (j)*res, (i+1)*res, (j+1)*res);
+    }
+    if(!node.edges.includes(valor+1)){//Baixo
+      line((i)*res, (j+1)*res, (i+1)*res, (j+1)*res);
+    }
+    if(!node.edges.includes(valor-(800/res))){//Esquerda
+      line((i)*res, (j)*res, (i)*res, (j+1)*res);
+    }
 }
 
 
@@ -163,10 +190,7 @@ if(flag == 0){
           exit();
         }
       }
-    }else{
-      drawSolve(x,y, parede);
     }
-
     count++;
   }
 
