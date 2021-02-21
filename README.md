@@ -1,7 +1,7 @@
 # Labirintos
 
-**Número da Lista**: X<br>
-**Conteúdo da Disciplina**: XXXXXXXXXX<br>
+**Número da Lista**: 14<br>
+**Conteúdo da Disciplina**: Grafos 1<br>
 
 ## Alunos
 |Matrícula | Aluno |
@@ -21,7 +21,7 @@ Adicione 3 ou mais screenshots do projeto em funcionamento.
 Descreva os pré-requisitos para rodar o seu projeto e os comandos necessários.
 
 ## Uso 
-Explique como usar seu projeto caso haja algum passo a passo após o comando de execução.
+Acesse o projeto pelo link https://algouvea.github.io/Grafos1_Labirintos
 
 ## Outros 
 Quaisquer outras informações sobre seu projeto podem ser descritas abaixo.
