@@ -13,9 +13,9 @@
  Um software para gerar labirintos e encontrar uma resolução para o labirinto gerado.
 
 ## Screenshots
-![Maze generation](/img/Print1.jpeg)
-![Complete Maze](/img/Print1.jpeg)
-![Maze Resolution](/img/Print1.jpeg)
+![Maze generation](https://github.com/AlGouvea/Grafos1_Labirintos/blob/master/img/Print1.jpg)
+![Complete Maze](https://github.com/AlGouvea/Grafos1_Labirintos/blob/master/img/Print2.jpg)
+![Maze Resolution](https://github.com/AlGouvea/Grafos1_Labirintos/blob/master/img/Print3.jpg)
 
 ## Instalação 
 **Linguagem**: Javascript<br>
