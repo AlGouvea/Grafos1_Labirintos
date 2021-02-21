@@ -1,15 +1,48 @@
 //Definicoes
 let labirinto = null;
 let labirintoSolve = null;
-let res = 40;
+let res = 80;
 flag = 0;
 
 //Botao para chamada da funcao resolver
 var btn = document.getElementById("Resolver");
 
+btn.addEventListener('click', function resolver(){ //Cria o event listener do click do botao
+  //Se labirinto nao tiver resolvido
+  if(flag == 1){
+    //Configura o grafo pra resolucao
+    setupGraph();
+
+    //Atualiza o Labirinto como resolvido
+    flag = 2;
+
+    //Altera botao para a geracao de outro labirinto
+    btn.textContent = "Gerar Outro";
+    btn.style.backgroundColor = "blue";
+  }else if(flag == 2){//Se labirinto tiver resolvido
+    //Carrega novo labirinto
+    //Definicoes
+    var context  = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    //Reseta valores
+    labirinto = null;
+    labirintoSolve = null;
+    flag = 0;
+
+    btn.style.visibility = "hidden";
+    btn.textContent = "Resolver";
+    btn.style.backgroundColor = "green";      
+
+    //Chama o setup
+    setup();
+  }
+});
+
 
 //Funcao de configuracao para gerar o labirinto
 function setup(){
+
     //Criar o canvas do labirinto
     var canvas = createCanvas(800, 800); 
     canvas.style.marginLeft = "800px";
@@ -26,16 +59,77 @@ function setup(){
 
 //Funcao de configuracao do grafo de resolucao
 function setupGraph(){
-  labirintoSolve = {
-    "nodulos":[],
-    "adjLista":[],
-  };
 
-  for(var i = 0; i < width/res; i++){
-    labirintoSolve.adjLista[i] = [];
+  labirintoSolve = {
+    "nodes": [],
   }
-  alert(labirinto.blocos[1][1].direita+" "+labirinto.blocos[1][1].baixo);
-  return;
+
+  if(flag == 1){
+    var nVertices = 0;
+    for(var i = 1; i <= 800/res; i++){
+      for(var j = 1; j <= 800/res; j++){
+        labirintoSolve.nodes[nVertices] = {
+          "edges": [],
+          "coords":[],
+          "visitado":false,
+        }
+
+        //Criar aresta entre blocos que nao tem parede
+        if(labirinto.blocos[i][j].cima == "open"){
+          labirintoSolve.nodes[nVertices].edges.push(nVertices-1);
+        }
+        if(labirinto.blocos[i][j].direita == "open"){
+          labirintoSolve.nodes[nVertices].edges.push(nVertices+(800/res));
+        }
+        if(labirinto.blocos[i][j].baixo == "open"){
+          labirintoSolve.nodes[nVertices].edges.push(nVertices+1);
+        }
+        if(labirinto.blocos[i][j].esquerda == "open"){
+          labirintoSolve.nodes[nVertices].edges.push(nVertices-(800/res));
+        }
+        labirintoSolve.nodes[nVertices].coords = [i, j];
+        nVertices++;
+      }
+    }
+
+    visited = new Set();//Vetor de blocos visitados 
+    DFS(0, nVertices-1, visited); //Chama a DFS
+    
+    exit();//Saida
+  }
+}
+
+
+function DFS(start, exit, visited, cont){
+  visited.add(start);//Adiciona o bloco aos visitados
+
+  const edges = labirintoSolve.nodes[start].edges;//Lista de adjacencia
+  var print = 0;//Se o bloco vai ser ou nao printado
+
+  for(const dest of edges){//Passa pelas arestas
+    if(dest == exit){//Se o vizinho for a saida
+      return 1;//Retorna 1
+    }
+
+    if(!visited.has(dest)){//Se nao for a saida e vizinho nao foi visitado
+      print = DFS(dest, exit, visited);//Chamo a DFS com o vizinho
+
+      if(print == 1){//Se print = 1 dabemos que faz parte da rota de resolucao
+        drawSolve(labirintoSolve.nodes[dest].coords[0]-1, labirintoSolve.nodes[dest].coords[1]-1);//Desenha o bloco da rota
+        return 1;//Passa a informacao pro resto da rota
+      }
+
+    }
+  }
+}
+
+
+function drawSolve(x, y){//Desenhar o bloco
+  //Definir quadrado
+  noStroke();
+  fill("green");
+  circle(x*res+(res/2), y*res+(res/2), res/2);
+
 }
 
 
@@ -43,58 +137,34 @@ function setupGraph(){
 function exit(){
   //Deixa o botao de "Resolver" visivel
   btn.style.visibility = "visible";
-
-  btn.addEventListener('click', function resolver(){ //Cria o event listener do click do botao
-    //Se labirinto nao tiver resolvido
-    if(flag == 1){
-      //Configura o grafo pra resolucao
-      setupGraph();
-      //Resolve
-      //
-      //Atualiza o Labirinto como resolvido
-      flag = 2;
-
-      //Altera botao para a geracao de outro labirinto
-      btn.textContent = "Gerar Outro";
-      btn.style.backgroundColor = "blue";
-    }else if(flag == 2){//Se labirinto tiver resolvido
-      //Carrega novo labirinto
-      //Definicoes
-      var context  = canvas.getContext('2d');
-      context.clearRect(0, 0, canvas.width, canvas.height);
-
-      //Reseta valores
-      labirinto = null;
-      flag = 0;
-
-      //Chama o setup
-      setup();
-    }
-  });
 }
 
 //Se labirinto nao estiver pronto
 if(flag == 0){
   let count = 0;//count para taxa de atualizacao da tela
 
-  function draw(){//Funcao que desenha na tela
-    if(count % 1 == 0){
-      //Se o labirinto nao estiver pronto
-      if(labirinto.stack.length != 0){
-        background("grey");//Cor do fundo
-        labirintoIterar();
-        drawlabirinto();
-      }else{
-        //Se labirinto e encontrado pronto pela primeira vez
-        if(flag == 0){
-          //Avisa o usuario e atualiza a flag
-          alert("Labirinto Pronto!");
-          flag = 1;
+  function draw(x, y){//Funcao que desenha na tela
+    if(flag == 0){
+      if(count % 1 == 0){
+        //Se o labirinto nao estiver pronto
+        if(labirinto.stack.length != 0){
+          background("grey");//Cor do fundo
+          labirintoIterar();
+          drawlabirinto();
+        }else{
+          //Se labirinto e encontrado pronto pela primeira vez
+          if(flag == 0){
+            //Avisa o usuario e atualiza a flag
+            alert("Labirinto Pronto!");
+            flag = 1;
+          }
+  
+          //Funcao de saida
+          exit();
         }
-
-        //Funcao de saida
-        exit();
       }
+    }else{
+      drawSolve(x,y, parede);
     }
 
     count++;
@@ -247,7 +317,8 @@ if(flag == 0){
   }
 
   function drawbloco(bloco, i, j){//Desenhar o bloco
-      strokeWeight(0);//
+      strokeWeight(1);
+      stroke("#ababab");
     
       if(bloco.visto == true){//Se o bloco foi visitado
         fill("white");//Pintar de branco
@@ -262,7 +333,7 @@ if(flag == 0){
         //Definir quadrado
         square(i*res, j*res, res);
         
-        //grossura e cor da parede
+        //Grossura e cor da parede
         strokeWeight(3);
         stroke("black");
 
