@@ -23,7 +23,7 @@
 Descreva os pré-requisitos para rodar o seu projeto e os comandos necessários.
 
 ## Uso 
-Acesse o projeto pelo link https://algouvea.github.io/Grafos1_Labirintos
+Execute o arquivo index.html após a clonagem do repositório
 
 ## Outros 
 Quaisquer outras informações sobre seu projeto podem ser descritas abaixo.
